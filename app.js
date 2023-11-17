@@ -76,6 +76,12 @@ app.put("/listings/:id", async (req, res) => {
   res.redirect(`/listings/${listing._id}`);
 });
 
+
+app.delete("/listings/:id", async (req, res) => {
+  await Listing.findByIdAndDelete(req.params.id);
+  res.redirect("/listings");
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
