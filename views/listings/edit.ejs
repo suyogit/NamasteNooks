@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NamasteNooks</title>
+</head>
+<body>
+
+    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+
+        <input type="text" value="<%= listing.title %>" name="listing[title]">
+        <br><br>
+        <!-- <input type="text" value="<%= listing.description %>" name="listing[description]"> -->
+        <textarea name="listing[description]" cols="30" rows="10"><%= listing.description %></textarea>
+        <br><br>
+        <input type="text"  value="<%= listing.image %>" name="listing[image]">
+        <br><br>
+        <input type="number"  value="<%= listing.price %>" name="listing[price]">
+        <br><br>
+        <input type="text"  value="<%= listing.location %>" name="listing[location]">
+        <br><br>
+        <input type="text"  value="<%= listing.country %>" name="listing[country]">
+        <br><br>
+        <button type="submit">Edit</button>
+
+    </form>
+    
+</body>
+</html>

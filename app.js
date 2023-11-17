@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 const port = 8080;
 const Listing = require("./models/Listing");
 const path = require("path");
+const methodOverride = require("method-override");
 
 // Set up view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 // Connect to MongoDB
 MONGO_URL = "mongodb://127.0.0.1:27017/NamasteNooks";
@@ -59,6 +61,20 @@ app.post("/listings", async (req, res) => {
   res.redirect("/listings");
 });
 
+app.get("/listings/:id/edit", async (req, res) => {
+  let listing = await Listing.findById(req.params.id);
+  res.render("listings/edit.ejs", { listing });
+});
+
+app.put("/listings/:id", async (req, res) => {
+  let listing = await Listing.findByIdAndUpdate(
+    req.params.id,
+    { ...req.body.listing }
+    //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
+    // and if we change the copy the original will not be changed
+  );
+  res.redirect(`/listings/${listing._id}`);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
