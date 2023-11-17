@@ -43,11 +43,21 @@ app.get("/listings", async (req, res) => {
   res.render("listings/index.ejs", { listings });
 });
 
+app.get("/listings/new", (req, res) => {
+  res.render("listings/new.ejs");
+});
+
 app.get("/listings/:id", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   res.render("listings/show.ejs", { listing });
 });
 
+app.post("/listings", async (req, res) => {
+  // let { title, description, price, location, country } = req.body.listing;
+  let listing = new Listing(req.body.listing);
+  await listing.save();
+  res.redirect("/listings");
+});
 
 
 app.listen(port, () => {
