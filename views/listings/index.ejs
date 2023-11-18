@@ -2,17 +2,34 @@
 <body>
     <h3>All listing</h3>
 
-    <ul>
-
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+        
+  
         <% for(let listing of listings) { %>
-            <li>
-                <a href="/listings/<%= listing._id %>">
-                    <%= listing.title %>
+
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+
+            <div class="card">
+<img src="<%= listing.image %>" alt="listing_image" class="card-image-top" style="height: 20rem">
+<div class="card-img-overlay"></div>
+<div class="card-body">
+    <p class="card-text">
+       <b> <%= listing.title %></b>
+        <br>
+        रु<%= listing.price.toLocaleString("en-IN") %>/night
+    </p>
+</div>
+            </div>
+        </a>
+            <!-- <li>
+                <a href="/listings/<%#= listing._id %>">
+                    <%#= listing.title %>
                 </a>
-            </li>
+            </li> -->
         <% } %>
 
-
-    </ul>
+    </div>
+    
+   
 
 </body>
