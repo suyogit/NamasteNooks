@@ -24,7 +24,6 @@ const ListingSchema = new Schema({
   },
   location: {
     type: String,
-    required: true,
   },
   country: {
     type: String,
