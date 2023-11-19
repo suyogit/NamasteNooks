@@ -8,7 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
-
+const { listingSchema } = require("./Schema.js");
 // Set up view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -62,7 +62,10 @@ app.post(
   "/listings",
   wrapAsync(async (req, res, next) => {
     // let { title, description, price, location, country } = req.body.listing;
-    if (!req.body.listing) throw new ExpressError("Invalid Listing Data", 400);
+    const result = listingSchema.validate(req.body);
+    if (result.error) {
+      throw new ExpressError(result.error, 400);
+    }
     let listing = new Listing(req.body.listing);
     await listing.save();
     res.redirect("/listings");
@@ -90,7 +93,10 @@ app.get(
 app.put(
   "/listings/:id",
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) throw new ExpressError("Invalid Listing Data", 400);
+    const result = listingSchema.validate(req.body);
+    if (result.error) {
+      throw new ExpressError(result.error, 400);
+    }
     let listing = await Listing.findByIdAndUpdate(
       req.params.id,
       { ...req.body.listing }
