@@ -6,6 +6,7 @@ const Listing = require("./models/Listing");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync");
 
 // Set up view engine
 app.set("view engine", "ejs");
@@ -43,30 +44,28 @@ app.get("/", (req, res) => {
 //   res.send(sampleListing);
 // });
 
-
 // index route
 app.get("/listings", async (req, res) => {
   let listings = await Listing.find({});
   res.render("listings/index.ejs", { listings });
 });
 
-
-
 //new form route
 app.get("/listings/new", (req, res) => {
   res.render("listings/new.ejs");
 });
 
-app.post("/listings", async (req, res, next) => {
-  // let { title, description, price, location, country } = req.body.listing;
-  try {
+app.post(
+  "/listings",
+  wrapAsync(async (req, res, next) => {
+    // let { title, description, price, location, country } = req.body.listing;
     let listing = new Listing(req.body.listing);
     await listing.save();
     res.redirect("/listings");
-  } catch (err) {
-    next(err);
-  }
-});
+  })
+);
+
+
 
 //show route
 app.get("/listings/:id", async (req, res) => {
