@@ -43,35 +43,46 @@ app.get("/", (req, res) => {
 //   res.send(sampleListing);
 // });
 
+
+// index route
 app.get("/listings", async (req, res) => {
   let listings = await Listing.find({});
   res.render("listings/index.ejs", { listings });
 });
 
 
+
+//new form route
 app.get("/listings/new", (req, res) => {
   res.render("listings/new.ejs");
 });
 
+app.post("/listings", async (req, res, next) => {
+  // let { title, description, price, location, country } = req.body.listing;
+  try {
+    let listing = new Listing(req.body.listing);
+    await listing.save();
+    res.redirect("/listings");
+  } catch (err) {
+    next(err);
+  }
+});
 
+//show route
 app.get("/listings/:id", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   res.render("listings/show.ejs", { listing });
 });
 
-app.post("/listings", async (req, res) => {
-  // let { title, description, price, location, country } = req.body.listing;
-  let listing = new Listing(req.body.listing);
-  await listing.save();
-  res.redirect("/listings");
-});
 
+
+//edit form route
 app.get("/listings/:id/edit", async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   res.render("listings/edit.ejs", { listing });
 });
 
-//edit route
+
 app.put("/listings/:id", async (req, res) => {
   let listing = await Listing.findByIdAndUpdate(
     req.params.id,
@@ -83,11 +94,19 @@ app.put("/listings/:id", async (req, res) => {
 });
 
 
+
+//delete route
 app.delete("/listings/:id", async (req, res) => {
   await Listing.findByIdAndDelete(req.params.id);
   res.redirect("/listings");
 });
 
+// Error Handling
+app.use((err, req, res, next) => {
+  res.send("Something went wrong");
+});
+
+// Start server
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
