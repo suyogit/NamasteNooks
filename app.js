@@ -53,6 +53,17 @@ app.get(
   })
 );
 
+
+const validateListing = (req, res, next) => {
+  let { error } = listingSchema.validate(req.body);
+  if (error) {
+    let msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};
+
 //new form route
 app.get("/listings/new", (req, res) => {
   res.render("listings/new.ejs");
@@ -60,12 +71,10 @@ app.get("/listings/new", (req, res) => {
 
 app.post(
   "/listings",
+  validateListing,
   wrapAsync(async (req, res, next) => {
     // let { title, description, price, location, country } = req.body.listing;
-    const result = listingSchema.validate(req.body);
-    if (result.error) {
-      throw new ExpressError(result.error, 400);
-    }
+
     let listing = new Listing(req.body.listing);
     await listing.save();
     res.redirect("/listings");
@@ -92,11 +101,8 @@ app.get(
 
 app.put(
   "/listings/:id",
+  validateListing,
   wrapAsync(async (req, res) => {
-    const result = listingSchema.validate(req.body);
-    if (result.error) {
-      throw new ExpressError(result.error, 400);
-    }
     let listing = await Listing.findByIdAndUpdate(
       req.params.id,
       { ...req.body.listing }
