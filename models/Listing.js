@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Review = require("./review.js");
 
 const ListingSchema = new Schema({
   title: {
@@ -34,5 +35,17 @@ const ListingSchema = new Schema({
     },
   ],
 });
+
+ListingSchema.post("findOneAndDelete", async function (listing) {
+  //doc is the document that was deleted wich is listing
+  if (listing) {
+    await Review.deleteMany({
+      _id: { $in: listing.reviews }, // if _id is the part of list then it will be deleted . here _id is the id of review
+    });
+  }
+});
+
+
+
 const Listing = mongoose.model("Listing", ListingSchema);
 module.exports = Listing;
