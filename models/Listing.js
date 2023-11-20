@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 const ListingSchema = new Schema({
@@ -28,6 +27,12 @@ const ListingSchema = new Schema({
   country: {
     type: String,
   },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
+  ],
 });
 const Listing = mongoose.model("Listing", ListingSchema);
 module.exports = Listing;

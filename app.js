@@ -9,6 +9,8 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
 const { listingSchema } = require("./Schema.js");
+const Review = require("./models/review.js");
+
 // Set up view engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -52,7 +54,6 @@ app.get(
     res.render("listings/index.ejs", { listings });
   })
 );
-
 
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
@@ -122,6 +123,19 @@ app.delete(
   })
 );
 
+// Review Routes
+app.post(
+  "/listings/:id/reviews",
+  wrapAsync(async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+    let review = new Review(req.body.review);
+    listing.reviews.push(review);
+    await review.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+  })
+);
+
 // Error Handling
 
 app.all("*", (req, res, next) => {
@@ -133,6 +147,8 @@ app.use((err, req, res, next) => {
   // res.status(statusCode).send(message);
   res.render("listings/error.ejs", { message });
 });
+
+
 
 // Start server
 app.listen(port, () => {
