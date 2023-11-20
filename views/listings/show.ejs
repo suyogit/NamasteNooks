@@ -44,7 +44,7 @@
     Leave a Review
 </h4>
 <!-- <form action="/listings/<%#= listing._id %>/reviews" method="POST"> -->
-    <form action="/listings/<%= listing._id %>/reviews" method="POST">
+    <form action="/listings/<%= listing._id %>/reviews" method="POST"  novalidate class="needs-validation">
 
 
     <div class="mb-3 mt-3">
@@ -53,7 +53,8 @@
     </div>
     <div class="mb-3 mt-3">
         <label for="comment" class="form-label">Comments</label>
-        <textarea class="form-control" id="comment" name="review[comment]" rows="5" cols="30"></textarea>
+        <textarea class="form-control" id="comment" name="review[comment]" rows="5" cols="30" required></textarea>
+        <div class="invalid-feedback">Please enter a comment.</div>
     </div>
     <button class="btn btn-outline-dark">Submit</button>
 </form>
