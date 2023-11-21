@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
 const ExpressError = require("../utils/ExpressError");
-const { listingSchema, reviewSchema } = require("../Schema.js");
+const { listingSchema } = require("../Schema.js");
 const Listing = require("../models/Listing");
 
 const validateListing = (req, res, next) => {
@@ -37,6 +37,11 @@ router.post(
 
     let listing = new Listing(req.body.listing);
     await listing.save();
+    if (!listing) {
+      req.flash("error", "Cannot create listing");
+      return res.redirect("/listings/new");
+    }
+    req.flash("success", "Successfully made a new listing");
     res.redirect("/listings");
   })
 );
@@ -46,6 +51,12 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id).populate("reviews");
+
+    if (!listing) {
+      req.flash("error", "Cannot find listing");
+      return res.redirect("/listings");
+    }
+
     res.render("listings/show.ejs", { listing });
   })
 );
@@ -55,6 +66,11 @@ router.get(
   "/:id/edit",
   wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      req.flash("error", "Cannot find listing");
+      return res.redirect("/listings");
+    }
+
     res.render("listings/edit.ejs", { listing });
   })
 );
@@ -69,6 +85,7 @@ router.put(
       //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
       // and if we change the copy the original will not be changed
     );
+    req.flash("success", "Successfully updated a listing");
     res.redirect(`/listings/${listing._id}`);
   })
 );
@@ -78,6 +95,8 @@ router.delete(
   "/:id",
   wrapAsync(async (req, res) => {
     await Listing.findByIdAndDelete(req.params.id);
+    req.flash("success", "Successfully Deleted a listing");
+
     res.redirect("/listings");
   })
 );
