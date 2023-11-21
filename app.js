@@ -19,6 +19,9 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+
+const listings = require("./routes/listing");
+
 // Connect to MongoDB
 MONGO_URL = "mongodb://127.0.0.1:27017/NamasteNooks";
 main()
@@ -46,25 +49,6 @@ app.get("/", (req, res) => {
 //   res.send(sampleListing);
 // });
 
-// index route
-app.get(
-  "/listings",
-  wrapAsync(async (req, res) => {
-    let listings = await Listing.find({});
-    res.render("listings/index.ejs", { listings });
-  })
-);
-
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
-
 const validateReview = (req, res, next) => {
   let { error } = reviewSchema.validate(req.body);
   if (error) {
@@ -75,63 +59,7 @@ const validateReview = (req, res, next) => {
   }
 };
 
-//new form route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new.ejs");
-});
-
-app.post(
-  "/listings",
-  validateListing,
-  wrapAsync(async (req, res, next) => {
-    // let { title, description, price, location, country } = req.body.listing;
-
-    let listing = new Listing(req.body.listing);
-    await listing.save();
-    res.redirect("/listings");
-  })
-);
-
-//show route
-app.get(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id).populate("reviews");
-    res.render("listings/show.ejs", { listing });
-  })
-);
-
-//edit form route
-app.get(
-  "/listings/:id/edit",
-  wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    res.render("listings/edit.ejs", { listing });
-  })
-);
-
-app.put(
-  "/listings/:id",
-  validateListing,
-  wrapAsync(async (req, res) => {
-    let listing = await Listing.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body.listing }
-      //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
-      // and if we change the copy the original will not be changed
-    );
-    res.redirect(`/listings/${listing._id}`);
-  })
-);
-
-//delete route
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    await Listing.findByIdAndDelete(req.params.id);
-    res.redirect("/listings");
-  })
-);
+app.use("/listings", listings);
 
 // Review Routes
 app.post(
