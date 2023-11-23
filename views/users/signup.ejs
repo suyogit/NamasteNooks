@@ -1,30 +1,30 @@
 <% layout("/layouts/boilerplate") %>
 
 <div class="row mt-3">
-    <div class="col-8 offset-2">
+    <div class="col-6 offset-3">
         <h1>Sign Up</h1>
         <form method="POST" action="/signup" novalidate class="needs-validation" >
             <div class="mb-3">
                 <label for="username" class="form-label" >Username</label>
-                <input type="text" name="username" class="form-control" required>
+                <input type="text" name="username" class="form-control" required id="username">
                 <div class="valid-feedback">Username looks good!</div>
                 <div class="invalid-feedback">Please enter a username.</div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label" >Email</label>
-                <input type="email" name="email" class="form-control" required>
+                <input type="email" name="email" class="form-control" required id="email">
                 <div class="valid-feedback">Email looks good!</div>
                 <div class="invalid-feedback">Please enter a valid email.</div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label" >Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control" required id="password">
                 <div class="valid-feedback">Password looks good!</div>
                 <div class="invalid-feedback">Please enter a password.</div>
             </div>
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label" >Confirm Password</label>
-                <input type="password" name="confirmPassword" class="form-control" required>
+                <input type="password" name="confirmPassword" class="form-control" required id="confirmPassword">
                 <div class="valid-feedback">Password looks good!</div>
                 <div class="invalid-feedback">Please enter a password.</div>
             </div>
