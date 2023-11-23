@@ -8,6 +8,9 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user");
 
 // Set up view engine
 app.set("view engine", "ejs");
@@ -44,10 +47,25 @@ app.get("/", (req, res) => {
 app.use(session(sesstionOptions));
 app.use(flash());
 
+// Passport
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser()); // how to store user in session
+passport.deserializeUser(User.deserializeUser()); // how to unstore user in session
+
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
+});
+
+//demo user
+app.get("/fakeUser", async (req, res) => {
+  const user = new User({ email: "suyog@gmail.com", username: "suyog" });
+  const newUser = await User.register(user, "suyog"); //suyog is password
+  res.send(newUser);
 });
 
 
