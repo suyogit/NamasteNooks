@@ -26,8 +26,9 @@ const sesstionOptions = {
   saveUninitialized: true,
 };
 
-const listings = require("./routes/listing");
-const reviews = require("./routes/review");
+const listingRouter = require("./routes/listing");
+const reviewRouter = require("./routes/review");
+const userRouter = require("./routes/user");
 
 // Connect to MongoDB
 MONGO_URL = "mongodb://127.0.0.1:27017/NamasteNooks";
@@ -62,15 +63,16 @@ app.use((req, res, next) => {
 });
 
 //demo user
-app.get("/fakeUser", async (req, res) => {
-  const user = new User({ email: "suyog@gmail.com", username: "suyog" });
-  const newUser = await User.register(user, "suyog"); //suyog is password
-  res.send(newUser);
-});
+// app.get("/fakeUser", async (req, res) => {
+//   const user = new User({ email: "suyog@gmail.com", username: "suyog" });
+//   const newUser = await User.register(user, "suyog"); //suyog is password
+//   res.send(newUser);
+// });
 
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
 
 
 // Error Handling
