@@ -22,8 +22,6 @@ router.post(
         req.flash("error", "Passwords do not match");
         return res.redirect("/signup");
       }
-
-      const registeredUser = await User.register(user, req.body.password);
       req.flash(
         "success",
         "Welcome to NamasteNooks! You have successfully registered."
@@ -41,7 +39,6 @@ router.post(
 router.get("/login", (req, res) => {
   res.render("users/login");
 });
-
 router.post(
   "/login",
   passport.authenticate("local", {
@@ -50,11 +47,26 @@ router.post(
   }),
   (req, res) => {
     req.flash("success", "Welcome back!");
-    const redirectUrl = req.session.returnTo || "/listings"; //
+    const redirectUrl = req.session.returnTo || "/listings";
+    console.log(redirectUrl);
     delete req.session.returnTo;
     res.redirect(redirectUrl);
   }
-);  
+);
+
+//logout
+router.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      req.flash("error", "Cannot logout");
+      return res.redirect("/listings");
+    }
+    req.flash("success", "Successfully logged out");
+    res.redirect("/listings");
+  });
+});
 
 
+  
+   
 module.exports = router;

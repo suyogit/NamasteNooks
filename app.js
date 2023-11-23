@@ -11,6 +11,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const { isLoggedIn } = require("./middleware");
 
 // Set up view engine
 app.set("view engine", "ejs");
@@ -52,6 +53,7 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser()); // how to store user in session
 passport.deserializeUser(User.deserializeUser()); // how to unstore user in session
