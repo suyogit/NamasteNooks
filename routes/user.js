@@ -22,11 +22,19 @@ router.post(
         req.flash("error", "Passwords do not match");
         return res.redirect("/signup");
       }
-      req.flash(
-        "success",
-        "Welcome to NamasteNooks! You have successfully registered."
-      );
-      res.redirect("/listings");
+
+      // Register user with passport
+      const registeredUser = await User.register(user, req.body.password);
+      req.login(registeredUser, (err) => {
+        if (err) {
+          return next(err);
+        }
+        req.flash(
+          "success",
+          "Welcome to NamasteNooks! You have successfully registered."
+        );
+        res.redirect("/listings");
+      });
     } catch (e) {
       req.flash("error", e.message);
       res.redirect("/signup");
