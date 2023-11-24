@@ -1,19 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
-const ExpressError = require("../utils/ExpressError");
-const { listingSchema } = require("../Schema.js");
+
 const Listing = require("../models/Listing");
-const { isLoggedIn } = require("../middleware");
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+const { isLoggedIn, isOwner, validateListing } = require("../middleware");
 
 // index route
 router.get(
@@ -51,7 +41,6 @@ router.post(
 //show route
 router.get(
   "/:id",
-  isLoggedIn,
   wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id)
       .populate("reviews")
@@ -70,6 +59,7 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     if (!listing) {
@@ -85,18 +75,10 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isOwner,
   validateListing,
   wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    let listing = await Listing.findById(req.params.id);
-    // console.log(listing.owner._id);
-    // console.log(res.locals.currUser._id);
-    if (!listing.owner.equals(res.locals.currUser._id)) {
-      req.flash("error", "You do not have permission to edit this listing");
-      return res.redirect(`/listings/${id}`);
-    }
-
-    await Listing.findByIdAndUpdate(
+    let listing = await Listing.findByIdAndUpdate(
       req.params.id,
       { ...req.body.listing }
       //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
@@ -111,6 +93,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
+  isOwner,
   wrapAsync(async (req, res) => {
     await Listing.findByIdAndDelete(req.params.id);
     req.flash("success", "Successfully Deleted a listing");
