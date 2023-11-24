@@ -31,11 +31,13 @@ router.get("/new", isLoggedIn, (req, res) => {
 
 router.post(
   "/",
+  isLoggedIn,
   validateListing,
   wrapAsync(async (req, res, next) => {
     // let { title, description, price, location, country } = req.body.listing;
 
     let listing = new Listing(req.body.listing);
+    listing.owner = req.user._id;
     await listing.save();
     if (!listing) {
       req.flash("error", "Cannot create listing");
@@ -49,14 +51,17 @@ router.post(
 //show route
 router.get(
   "/:id",
+  isLoggedIn,
   wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id).populate("reviews");
+    let listing = await Listing.findById(req.params.id)
+      .populate("reviews")
+      .populate("owner");
 
     if (!listing) {
       req.flash("error", "Cannot find listing");
       return res.redirect("/listings");
     }
-
+    console.log(listing);
     res.render("listings/show.ejs", { listing });
   })
 );

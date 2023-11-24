@@ -12,15 +12,18 @@
         <img src="<%= listing.image %>" class="card-img-top show-img" alt="Hotel_image">
         <div class="card-body">
             <p class="card-text">
-                 <br><br>
-                <strong>Description:</strong>
-                <%= listing.description %> <br><br>
-                <strong>Price:</strong>
-                रु  <%= listing.price.toLocaleString("en-IN") %> <br><br>
-                <strong>Location:</strong>
-                <%= listing.location %> <br><br>
-                <strong>Country:</strong>
-                <%= listing.country %> <br><br>
+                 
+                 <p class="card-text">
+                <strong>Hosted By:</strong>
+               <i><%= listing.owner[0].username %> </i> </p>
+               <p class="card-text"><strong>Description:</strong>
+                <%= listing.description %> </p> 
+                <p class="card-text"><strong>Price:</strong>
+                रु  <%= listing.price.toLocaleString("en-IN") %> </p>
+                <p class="card-text"><strong>Location:</strong>
+                <%= listing.location %></p>
+                <p class="card-text"><strong>Country:</strong>
+                <%= listing.country %> </p>
 
             </p>
         </div>
