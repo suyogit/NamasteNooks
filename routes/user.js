@@ -46,9 +46,9 @@ router.post(
     failureRedirect: "/login",
   }),
   (req, res) => {
-    req.flash("success", "Welcome back!");
+    req.flash("success", "Welcome back " + req.user.username + " !");
     const redirectUrl = req.session.returnTo || "/listings";
-    console.log(redirectUrl);
+    // console.log(redirectUrl);
     delete req.session.returnTo;
     res.redirect(redirectUrl);
   }
