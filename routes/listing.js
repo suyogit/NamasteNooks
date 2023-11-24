@@ -35,7 +35,7 @@ router.post(
   validateListing,
   wrapAsync(async (req, res, next) => {
     // let { title, description, price, location, country } = req.body.listing;
-
+    //console.log(req.user);
     let listing = new Listing(req.body.listing);
     listing.owner = req.user._id;
     await listing.save();
@@ -61,7 +61,7 @@ router.get(
       req.flash("error", "Cannot find listing");
       return res.redirect("/listings");
     }
-    console.log(listing);
+    // console.log(listing);
     res.render("listings/show.ejs", { listing });
   })
 );
@@ -81,12 +81,22 @@ router.get(
   })
 );
 
+//update route
 router.put(
   "/:id",
   isLoggedIn,
   validateListing,
   wrapAsync(async (req, res) => {
-    let listing = await Listing.findByIdAndUpdate(
+    let { id } = req.params;
+    let listing = await Listing.findById(req.params.id);
+    // console.log(listing.owner._id);
+    // console.log(res.locals.currUser._id);
+    if (!listing.owner.equals(res.locals.currUser._id)) {
+      req.flash("error", "You do not have permission to edit this listing");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    await Listing.findByIdAndUpdate(
       req.params.id,
       { ...req.body.listing }
       //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
