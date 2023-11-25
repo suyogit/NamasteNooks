@@ -41,14 +41,15 @@ module.exports.createListing = async (req, res, next) => {
       limit: 1,
     })
     .send();
-  console.log(response.body.features[0].geometry.coordinates); // [long,lat]
-  res.send("done");
+  //console.log(response.body.features[0].geometry.coordinates); // [long,lat]
 
   let url = req.file.path;
   let filename = req.file.filename;
   let listing = new Listing(req.body.listing);
+
   listing.owner = req.user._id;
   listing.image = { url, filename };
+  listing.geometry = response.body.features[0].geometry;
   await listing.save();
   if (!listing) {
     req.flash("error", "Cannot create listing");
