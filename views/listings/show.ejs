@@ -1,11 +1,13 @@
 <% layout('layouts/boilerplate') %>
-
+<script>
+    const mapToken="<%= process.env.MAP_TOKEN %>";
+    </script>
 <div class="row mt-3">
     <div class="col-8 offset-3">
-        <strong>
-        <%= listing.title %></strong>
+        <h2><strong>
+        <%= listing.title %></strong></h2>
         <br>
-        <br>
+        
     </div>
 
     <div class="card col-8 offset-3 show-card listing-card">
@@ -71,9 +73,6 @@
             <label for="first-rate5" title="Amazing">5 stars</label>
           </fieldset>
           </div>
-
-
-
     <div class="mb-3 mt-3">
         <label for="comment" class="form-label">Comments</label>
         <textarea class="form-control" id="comment" name="review[comment]" rows="5" cols="30" required></textarea>
@@ -83,9 +82,9 @@
 </form>
 <% } %>
 <hr>
-<p><b>Reviews </b></p>
-
-
+<p>
+    <b> <%= listing.reviews.length %> </b> Reviews
+</p>
 <div class="row">
     <% for(review of listing.reviews) { %>
         <div class="card col-5 ms-3 mb-3">
@@ -108,5 +107,14 @@
     <% } %>
     </div>
 </div>
+<div class="col-8 offset-3 mb-3">
+    <h3>
+        Where you'll be...
+    </h3>
+    <div id="map">
+
+        </div>
+        </div>
 </div>
 
+<script src="/js/map.js"></script>

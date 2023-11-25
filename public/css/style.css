@@ -147,3 +147,12 @@ flex:1;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+/* MAP */
+
+#map {
+    height: 400px;
+    width: 100vh;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+  }
