@@ -30,8 +30,11 @@ module.exports.showListing = async (req, res) => {
 module.exports.createListing = async (req, res, next) => {
   // let { title, description, price, location, country } = req.body.listing;
   //console.log(req.user);
+  let url = req.file.path;
+  let filename = req.file.filename;
   let listing = new Listing(req.body.listing);
   listing.owner = req.user._id;
+  listing.image = { url, filename };
   await listing.save();
   if (!listing) {
     req.flash("error", "Cannot create listing");
