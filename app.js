@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -76,8 +80,6 @@ app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-
-
 // Error Handling
 
 app.all("*", (req, res, next) => {
@@ -89,8 +91,6 @@ app.use((err, req, res, next) => {
   // res.status(statusCode).send(message);
   res.render("listings/error.ejs", { message });
 });
-
-
 
 // Start server
 app.listen(port, () => {
