@@ -22,8 +22,19 @@
                         <div class="invalid-feedback">Please enter a a short description.</div>
 
         </div>
+
         <div class="mb-3">
-            <label for ="image" class="form-label">Upload Listing image</label>
+            <label for ="image" class="form-label">Original image</label><br>
+            <img src="<%= originalImageUrl %>" alt="current_image"
+            
+            style="height: 10rem ; width: 10rem; border-radius: 10px; object-fit: cover;"
+
+            >
+            
+        </div>
+
+        <div class="mb-3">
+            <label for ="image" class="form-label">Upload new image</label>
             <input type="file"  name="listing[image]" class="form-control" >
             
         </div>

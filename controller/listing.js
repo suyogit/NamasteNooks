@@ -50,17 +50,24 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Cannot find listing");
     return res.redirect("/listings");
   }
-
-  res.render("listings/edit.ejs", { listing });
+  let originalImageUrl = listing.image.url;
+  originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_200,h_200");
+  res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
 
 module.exports.updateListing = async (req, res) => {
-   listing = await Listing.findByIdAndUpdate(
-     req.params.id,
-     { ...req.body.listing }
-     //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
-     // and if we change the copy the original will not be changed
-   );
+  listing = await Listing.findByIdAndUpdate(
+    req.params.id,
+    { ...req.body.listing }
+    //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
+    // and if we change the copy the original will not be changed
+  );
+  if (typeof req.file !== "undefined" && req.file !== null) {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { url, filename };
+    await listing.save();
+  }
   req.flash("success", "Successfully updated a listing");
   res.redirect(`/listings/${listing._id}`);
 };
