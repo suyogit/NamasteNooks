@@ -55,12 +55,12 @@ module.exports.renderEditForm = async (req, res) => {
 };
 
 module.exports.updateListing = async (req, res) => {
-  let listing = await Listing.findByIdAndUpdate(
-    req.params.id,
-    { ...req.body.listing }
-    //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
-    // and if we change the copy the original will not be changed
-  );
+   listing = await Listing.findByIdAndUpdate(
+     req.params.id,
+     { ...req.body.listing }
+     //diffent between req.body.listing and {...req.body.listing} is that req.body.listing is an object and {...req.body.listing} is a copy of that object
+     // and if we change the copy the original will not be changed
+   );
   req.flash("success", "Successfully updated a listing");
   res.redirect(`/listings/${listing._id}`);
 };
