@@ -42,7 +42,7 @@ async function main() {
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: {
-    secret: "mysecretkey",
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 60 * 60, // in seconds
 });
@@ -53,7 +53,7 @@ store.on("error", function (e) {
 
 const sesstionOptions = {
   store,
-  secret: "mysecretkey",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
 };
@@ -64,11 +64,10 @@ const userRouter = require("./routes/user");
 
 // Connect to MongoDB
 
-
-// Routes
-// app.get("/", (req, res) => {
-//   res.send("Hello World");
-// });
+//Routes;
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 
 app.use(session(sesstionOptions));
