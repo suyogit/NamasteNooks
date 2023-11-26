@@ -11,6 +11,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -25,7 +26,33 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+
+//MONGO_URL = "mongodb://127.0.0.1:27017/NamasteNooks";
+const dbUrl =
+  process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/NamasteNooks";
+main()
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect(dbUrl);
+}
+
+// Mongo Session Store
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: "mysecretkey",
+  },
+  touchAfter: 24 * 60 * 60, // in seconds
+});
+
+store.on("error", function (e) {
+  console.log("Session Store Error", e);
+});
+
 const sesstionOptions = {
+  store,
   secret: "mysecretkey",
   resave: false,
   saveUninitialized: true,
@@ -36,19 +63,13 @@ const reviewRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 
 // Connect to MongoDB
-MONGO_URL = "mongodb://127.0.0.1:27017/NamasteNooks";
-main()
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.log(err));
 
-async function main() {
-  await mongoose.connect(MONGO_URL);
-}
 
 // Routes
 // app.get("/", (req, res) => {
 //   res.send("Hello World");
 // });
+
 
 app.use(session(sesstionOptions));
 app.use(flash());
