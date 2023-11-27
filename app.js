@@ -39,20 +39,20 @@ async function main() {
 }
 
 // Mongo Session Store
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET,
-  },
-  touchAfter: 24 * 60 * 60, // in seconds
-});
+// const store = MongoStore.create({
+//   mongoUrl: dbUrl,
+//   crypto: {
+//     secret: process.env.SECRET,
+//   },
+//   touchAfter: 24 * 60 * 60, // in seconds
+// });
 
-store.on("error", function (e) {
-  console.log("Session Store Error", e);
-});
+// store.on("error", function (e) {
+//   console.log("Session Store Error", e);
+// });
 
 const sesstionOptions = {
-  store,
+  // store,
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,

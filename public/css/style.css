@@ -129,6 +129,7 @@ flex:1;
 {
     background-color: #fe424d;
     border: none !important;
+   margin-right: 1rem;
 }
 
 /* show page */
@@ -156,3 +157,110 @@ flex:1;
     margin-bottom: 2rem;
     border-radius: 10px;
   }
+
+  /* Default styles for larger screens */
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.col-8 {
+    width: 66.66667%;
+}
+
+.offset-3 {
+    margin-left: 25%;
+}
+
+/* Media query for smaller screens (mobile) */
+
+@media (max-width: 767px) {
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .col-8 {
+        width: 100%;
+    }
+
+    .offset-3 {
+        margin-left: 0;
+    }
+
+    .show-card {
+        margin-top: 15px; /* Adjust spacing for smaller screens */
+    }
+    .show-img
+    {
+        height: 17rem;
+
+    }
+
+    .edit-btn,
+    .btn-dark {
+        width: 30%; /* Make buttons full-width on smaller screens */
+        margin-top: 10px;
+       
+    }
+    .delete-btn
+    {
+
+        margin-left: 20rem;
+        margin-top: 0px;
+    }
+
+   
+    .starability-slot {
+        margin-bottom: 15px; /* Adjust spacing for the rating stars */
+    }
+
+    .btns {
+      
+        display: block;
+    }
+
+    .mb-3,
+    .mt-3 {
+        margin-bottom: 15px; /* Adjust margin for form elements */
+    }
+
+    #map {
+        height: 200px; /* Adjust map height for smaller screens */
+        width: 300px;;
+    }
+   .rating-box
+   {
+    display: block;
+   }
+   .card
+   {
+    width: auto !important;
+   }
+}
+
+/* Media query for smaller screens (tablets)  making add new listing responsive*/
+@media (max-width: 767px) {
+    .col-8 {
+        width: 100%; /* Make the form full-width on small screens */
+        margin: 0; /* Remove the horizontal margin for full-width */
+    }
+
+    .mb-3 {
+        margin-bottom: 15px; /* Add some bottom margin between form elements on small screens */
+    }
+
+    .col-md-4,
+    .col-md-8 {
+        width: 100%; /* Make the columns full-width on small screens */
+    }
+
+    /* making flash reponsive */
+   
+        .col-6.offset-3 {
+            width: 100%; /* Make the alert full-width on small screens */
+            margin: 0; /* Remove the horizontal margin for full-width */
+        }
+    
+}
